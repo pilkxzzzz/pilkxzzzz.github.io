@@ -1,0 +1,1673 @@
+:root {
+    /* Світла тема */
+    --light-bg: #ffffff;
+    --light-text: #1a1a1a;
+    --light-hint: #666666;
+    --light-border: #e0e0e0;
+    --light-button: #2481cc;
+    --light-button-text: #ffffff;
+    --light-danger: #ff4b4b;
+    --light-success: #4CAF50;
+
+    /* Темна тема */
+    --dark-bg: #1a1a1a;
+    --dark-text: #ffffff;
+    --dark-hint: #999999;
+    --dark-border: #333333;
+    --dark-button: #2481cc;
+    --dark-button-text: #ffffff;
+    --dark-danger: #ff4b4b;
+    --dark-success: #4CAF50;
+}
+
+/* Застосування теми */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --tg-theme-bg-color: var(--dark-bg);
+        --tg-theme-text-color: var(--dark-text);
+        --tg-theme-hint-color: var(--dark-hint);
+        --tg-theme-button-color: var(--dark-button);
+        --tg-theme-button-text-color: var(--dark-button-text);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --tg-theme-bg-color: var(--light-bg);
+        --tg-theme-text-color: var(--light-text);
+        --tg-theme-hint-color: var(--light-hint);
+        --tg-theme-button-color: var(--light-button);
+        --tg-theme-button-text-color: var(--light-button-text);
+    }
+}
+
+/* Загальні стилі */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    line-height: 1.6;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* Сторінки */
+.page {
+    display: none;
+    min-height: 100vh;
+    padding: 15px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+    position: relative;
+}
+
+/* Форми */
+.form-group {
+    margin-bottom: 12px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--tg-theme-hint-color);
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px;
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    font-size: 14px;
+}
+
+/* Кнопки */
+.button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-bottom: 8px;
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.button.secondary {
+    background: transparent;
+    border: 1px solid var(--tg-theme-button-color);
+    color: var(--tg-theme-button-color);
+}
+
+/* Модальні вікна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--tg-theme-bg-color);
+    padding: 15px;
+    border-radius: 12px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 10px;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--tg-theme-hint-color);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px;
+    background: var(--tg-theme-secondary-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+.modal .button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Профіль */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+}
+
+.profile-avatar {
+    width: 30%;
+    max-width: 150px;
+    min-width: 80px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 20px auto;
+    display: block;
+    border: 3px solid var(--tg-theme-button-color);
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 10px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid var(--tg-theme-button-color);
+}
+
+#userAvatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+}
+
+.avatar-wrapper:hover .avatar-overlay {
+    opacity: 1;
+}
+
+/* Стилі для області перетягування */
+.avatar-wrapper.dragover {
+    border-color: var(--tg-theme-button-color);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Стрічка користувачів */
+.users-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.user-card {
+    background: var(--tg-theme-bg-color);
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    max-width: 100%;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.like-button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    margin: 15px auto 0;
+    font-size: 14px;
+}
+
+.like-button:not(.liked) {
+    background: var(--tg-theme-bg-color);
+    border: 2px solid var(--light-danger);
+    color: var(--light-danger);
+}
+
+.like-button.liked {
+    background: var(--light-danger);
+    color: white;
+    border: 2px solid var(--light-danger);
+}
+
+.like-button:hover {
+    transform: scale(1.05);
+}
+
+.like-button:active {
+    transform: scale(0.95);
+}
+
+.like-button .icon {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.like-button:hover .icon {
+    transform: scale(1.2);
+}
+
+/* Анімація для лайка */
+@keyframes likeAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.like-button.liked .icon {
+    animation: likeAnimation 0.5s ease;
+}
+
+/* Оновлені стилі для інформації користувача */
+.user-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0;
+    color: var(--tg-theme-text-color);
+}
+
+.user-bio {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 15px;
+    line-height: 1.4;
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    border: 3px solid var(--tg-theme-button-color);
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.user-card:hover .user-avatar {
+    transform: scale(1.05);
+}
+
+/* Сповіщення */
+.notifications-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+.notifications-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--light-danger);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--tg-theme-hint-color);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: background-color 0.3s;
+}
+
+.notification-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.notification-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.notification-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.notification-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.notification-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-username {
+    font-weight: 600;
+    color: var(--tg-theme-text-color);
+}
+
+.notification-bio {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+}
+
+.notification-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.notification-actions .button {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--tg-theme-hint-color);
+}
+
+.notification-item.unread {
+    background: rgba(var(--tg-theme-button-color), 0.1);
+}
+
+.notification-content {
+    margin: 5px 0;
+}
+
+.accept-button, .decline-button {
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin: 0;
+}
+
+.accept-button {
+    background: var(--light-success);
+    border: none;
+}
+
+.decline-button {
+    background: transparent;
+    border: 2px solid var(--light-danger);
+    color: var(--light-danger);
+}
+
+.accept-button:hover, .decline-button:hover {
+    transform: scale(1.1);
+}
+
+.accept-button:active, .decline-button:active {
+    transform: scale(0.95);
+}
+
+.notification-status {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.notification-status.accepted {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.notification-status.declined {
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+}
+
+.notification-status .icon {
+    font-size: 12px;
+}
+
+/* Анімація для нових сповіщень */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification-item.new {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Стилі для модального вікна сповіщень */
+#notificationsModal .modal-content {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#notificationsModal .modal-header {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--tg-theme-hint-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#notificationsModal .modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Стилі для порожнього стану */
+.notifications-empty {
+    text-align: center;
+    padding: 30px;
+    color: var(--tg-theme-hint-color);
+}
+
+.notifications-empty .icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+/* Налаштування */
+.settings-section {
+    background: rgba(var(--tg-theme-button-color), 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.settings-section h3 {
+    margin-bottom: 15px;
+    color: var(--tg-theme-text-color);
+}
+
+.section-description {
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Стилі для кнопок донату */
+.donation-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.donation-btn {
+    padding: 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+}
+
+.donation-btn .icon {
+    font-size: 16px;
+}
+
+.donation-btn.custom {
+    grid-column: auto;
+}
+
+/* Стилі для інформації про версію */
+.version-info {
+    color: var(--tg-theme-hint-color);
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.contact-dev-btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Анімації */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Повідомлення */
+.message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Адаптивність */
+@media (max-width: 360px) {
+    .page {
+        padding: 10px;
+    }
+    
+    .modal-content {
+        padding: 12px;
+    }
+    
+    .button {
+        padding: 8px;
+        font-size: 13px;
+    }
+    
+    .user-card {
+        padding: 12px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+    .users-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 481px) {
+    .users-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .donation-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Анімації для плавних переходів */
+.processing {
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.like-button {
+    transition: all 0.3s ease;
+}
+
+.like-button:not(.processing):hover {
+    transform: scale(1.05);
+}
+
+/* Стилі для станів завантаження */
+.loading, .empty-state, .error {
+    animation: fadeIn 0.3s ease;
+}
+
+.primary-button {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+    transition: opacity 0.3s ease;
+}
+
+.primary-button:hover {
+    opacity: 0.9;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--tg-theme-hint-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.form-group input[type="text"]#telegramInput {
+    padding: 12px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.form-group input[type="text"]#telegramInput:focus {
+    border-color: var(--tg-theme-button-color);
+    outline: none;
+}
+
+.user-profile-view {
+    text-align: center;
+    padding: 20px;
+}
+
+.user-profile-view .user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.user-profile-view h2 {
+    margin: 10px 0;
+    color: var(--tg-theme-text-color);
+}
+
+.user-profile-view .user-bio {
+    margin: 15px 0;
+    color: var(--tg-theme-hint-color);
+}
+
+.user-profile-view .user-telegram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.user-profile-view .profile-actions {
+    margin: 20px 0;
+}
+
+.user-profile-view .button {
+    margin: 5px 0;
+}
+
+/* Стилі для налаштувань */
+.settings-container {
+    padding: 20px 0;
+}
+
+.settings-container .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.settings-container label {
+    margin-bottom: 0;
+}
+
+.settings-container select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    background: var(--tg-theme-secondary-bg-color);
+    color: var(--tg-theme-text-color);
+    border: 1px solid var(--tg-theme-hint-color);
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group .button {
+    flex: 1;
+}
+
+.user-telegram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px 0;
+    padding: 5px;
+    background: rgba(var(--tg-theme-button-color), 0.1);
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.user-telegram .icon {
+    color: #0088cc;
+}
+
+.help-text {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+    margin-top: 5px;
+    display: block;
+}
+
+#manualTelegramForm {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(var(--tg-theme-button-color), 0.1);
+}
+
+#manualTelegramForm .form-group {
+    margin-bottom: 10px;
+}
+
+#manualTelegramForm input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px;
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+#manualTelegramForm .help-text {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+    margin-top: 5px;
+}
+
+#manualTelegramBtn {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.user-privacy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.user-privacy.private {
+    background: rgba(255, 75, 75, 0.1);
+    color: #ff4b4b;
+}
+
+.user-privacy .icon {
+    font-size: 14px;
+}
+
+.like-button.private {
+    background: rgba(var(--tg-theme-button-color), 0.8);
+}
+
+/* Преміум стилі */
+.premium-content {
+    max-width: 500px;
+}
+
+.premium-status {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 12px;
+    color: #fff;
+}
+
+.premium-badge {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.premium-badge .icon {
+    margin-right: 10px;
+}
+
+.premium-settings {
+    margin-top: 20px;
+}
+
+.color-picker {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.color-picker input[type="color"] {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.emoji-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.emoji-option {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px;
+    background: var(--tg-theme-bg-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.emoji-option.selected {
+    border-color: var(--tg-theme-button-color);
+    background: rgba(var(--tg-theme-button-color), 0.1);
+    transform: scale(1.1);
+}
+
+/* Анімації для преміум профілів */
+.profile-animation-fade {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.profile-animation-slide {
+    animation: slideIn 0.8s ease-out;
+}
+
+.profile-animation-bounce {
+    animation: bounce 1s cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+
+/* Ефекти наведення */
+.hover-effect-glow:hover {
+    box-shadow: 0 0 20px rgba(var(--tg-theme-button-color), 0.5);
+}
+
+.hover-effect-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-effect-rotate:hover {
+    transform: rotate(5deg);
+}
+
+/* Фони */
+.background-gradient {
+    background: linear-gradient(135deg, var(--tg-theme-bg-color), var(--tg-theme-button-color));
+}
+
+.background-particles {
+    position: relative;
+    overflow: hidden;
+}
+
+.background-waves {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Преміум кнопка в профілі */
+.premium-btn {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    margin-top: 20px;
+}
+
+.premium-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Стилі для преміум користувачів */
+.premium-user {
+    position: relative;
+    border: 2px solid transparent;
+    background: var(--tg-theme-bg-color);
+}
+
+.premium-user::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    z-index: -1;
+}
+
+.user-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.premium-icon {
+    font-size: 24px;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+/* Анімації для преміум користувачів */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    70% { transform: scale(0.9); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Нові фонові ефекти */
+.background-snow {
+    position: relative;
+    overflow: hidden;
+}
+
+.background-snow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 50% 50%, var(--effect-color, white) var(--snow-size, 0.5px), transparent calc(var(--snow-size, 0.5px) + 1px)),
+        radial-gradient(circle at 30% 20%, var(--effect-color, white) var(--snow-size, 0.5px), transparent calc(var(--snow-size, 0.5px) + 1px)),
+        radial-gradient(circle at 70% 40%, var(--effect-color, white) var(--snow-size, 0.5px), transparent calc(var(--snow-size, 0.5px) + 1px));
+    animation: snowfall var(--snow-speed, 10s) linear infinite;
+    opacity: calc(var(--snow-density, 5) * 0.1);
+    z-index: 1;
+}
+
+.background-matrix {
+    position: relative;
+    overflow: hidden;
+}
+
+.background-matrix::before {
+    content: attr(data-chars);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    font-family: monospace;
+    font-size: var(--matrix-size, 10px);
+    line-height: var(--matrix-size, 10px);
+    color: var(--effect-color, #00ff00);
+    white-space: pre;
+    animation: matrix var(--matrix-speed, 20s) linear infinite;
+    z-index: 1;
+}
+
+.background-terminal::before {
+    content: attr(data-terminal-text);
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: var(--effect-color, #00ff00);
+    font-family: monospace;
+    font-size: 16px;
+    animation: blink var(--terminal-blink-speed, 1s) step-end infinite;
+    z-index: 1;
+}
+
+.background-sparkles {
+    position: relative;
+    overflow: hidden;
+}
+
+.background-sparkles::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 30% 30%, var(--effect-color, white) 0%, transparent 10%),
+        radial-gradient(circle at 70% 70%, var(--effect-color, white) 0%, transparent 10%),
+        radial-gradient(circle at 50% 50%, var(--effect-color, white) 0%, transparent 10%);
+    animation: sparkle 2s ease-in-out infinite;
+    z-index: 1;
+}
+
+.background-bubbles {
+    position: relative;
+    overflow: hidden;
+}
+
+.background-bubbles::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 50%, rgba(255,255,255,0.2) 0%, transparent 20%),
+        radial-gradient(circle at 70% 30%, rgba(255,255,255,0.2) 0%, transparent 20%);
+    animation: bubbles 8s ease-in-out infinite;
+}
+
+.background-neon {
+    position: relative;
+    overflow: hidden;
+}
+
+.background-neon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    border: 2px solid var(--effect-color, #00ff00);
+    border-radius: inherit;
+    box-shadow: 
+        0 0 calc(var(--neon-intensity, 5) * 1px) var(--effect-color, #00ff00),
+        0 0 calc(var(--neon-intensity, 5) * 2px) var(--effect-color, #00ff00),
+        0 0 calc(var(--neon-intensity, 5) * 3px) var(--effect-color, #00ff00);
+    animation: neonPulse var(--neon-pulse-speed, 2s) ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Нові ефекти наведення */
+.hover-effect-shake:hover {
+    animation: shake 0.5s ease-in-out;
+}
+
+.hover-effect-glitch:hover {
+    animation: glitch 0.3s ease-in-out infinite;
+}
+
+.hover-effect-rainbow:hover {
+    animation: rainbow 2s linear infinite;
+}
+
+.hover-effect-flip:hover {
+    transform: rotateY(180deg);
+    transition: transform 0.6s;
+}
+
+/* Нові анімації */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateY(50px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
+
+@keyframes bounce {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    70% { transform: scale(0.9); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes matrix {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100%); }
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes sparkle {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+@keyframes bubbles {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes neonPulse {
+    0% { 
+        box-shadow: 
+            0 0 calc(var(--neon-intensity, 5) * 1px) var(--effect-color),
+            0 0 calc(var(--neon-intensity, 5) * 2px) var(--effect-color),
+            0 0 calc(var(--neon-intensity, 5) * 3px) var(--effect-color);
+    }
+    50% { 
+        box-shadow: 
+            0 0 calc(var(--neon-intensity, 5) * 2px) var(--effect-color),
+            0 0 calc(var(--neon-intensity, 5) * 4px) var(--effect-color),
+            0 0 calc(var(--neon-intensity, 5) * 6px) var(--effect-color);
+    }
+    100% { 
+        box-shadow: 
+            0 0 calc(var(--neon-intensity, 5) * 1px) var(--effect-color),
+            0 0 calc(var(--neon-intensity, 5) * 2px) var(--effect-color),
+            0 0 calc(var(--neon-intensity, 5) * 3px) var(--effect-color);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+@keyframes rainbow {
+    0% { border-color: red; }
+    17% { border-color: orange; }
+    33% { border-color: yellow; }
+    50% { border-color: green; }
+    67% { border-color: blue; }
+    84% { border-color: indigo; }
+    100% { border-color: violet; }
+}
+
+/* Оновлені стилі для ефектів */
+.effect-settings {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(var(--tg-theme-button-color), 0.05);
+    border-radius: 8px;
+}
+
+.effect-settings label {
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+/* Стилі для сторінки покупки преміуму */
+.premium-info {
+    text-align: center;
+    padding: 20px;
+}
+
+.premium-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.feature {
+    background: rgba(var(--tg-theme-button-color), 0.1);
+    padding: 15px;
+    border-radius: 12px;
+    transition: transform 0.3s;
+}
+
+.feature:hover {
+    transform: translateY(-2px);
+}
+
+.feature .icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.premium-price {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 12px;
+    color: #fff;
+}
+
+.premium-price h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.price {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#purchasePremiumBtn {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    font-size: 18px;
+    padding: 15px 30px;
+    margin-top: 20px;
+}
+
+#purchasePremiumBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Стилі для преміум карток */
+.user-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-user {
+    border: 2px solid var(--effect-color, #FFD700);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.premium-user .user-avatar {
+    border: 3px solid var(--effect-color, #FFD700);
+}
+
+.premium-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    filter: drop-shadow(0 0 5px var(--effect-color, rgba(255, 215, 0, 0.5)));
+    z-index: 2;
+}
+
+/* Забезпечуємо видимість контенту поверх ефектів */
+.user-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Оновлюємо стилі для заголовка стрічки */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.feed-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Оновлюємо стилі для значка повідомлень */
+.notification-badge {
+    background: var(--light-danger);
+    color: white;
+    border-radius: 50%;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+/* Ховаємо значок, якщо немає повідомлень */
+.notification-badge:empty,
+.notification-badge[data-count="0"] {
+    display: none;
+}
+
+.feed-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.feed-actions .button {
+    width: auto;
+    padding: 8px 15px;
+}
+
+/* Додаємо стилі для клікабельного блоку Telegram */
+.user-telegram.clickable {
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    padding: 8px 15px;
+    background: rgba(var(--tg-theme-button-color), 0.1);
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.user-telegram.clickable:hover {
+    transform: translateY(-2px);
+    opacity: 0.8;
+}
+
+.user-telegram.clickable:active {
+    transform: translateY(0);
+}
+
+/* Стилі для кнопки зв'язку з розробником */
+.contact-developer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.contact-btn:active {
+    transform: translateY(0);
+}
+
+.contact-btn .icon {
+    font-size: 1.2em;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    .contact-developer {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .contact-btn {
+        padding: 10px 16px;
+        font-size: 0.9em;
+    }
+}
+
+/* Стилі для адмін-панелі */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.admin-section {
+    background: rgba(var(--tg-theme-button-color), 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-section h2 {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.stat-card {
+    background: var(--tg-theme-bg-color);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-title {
+    display: block;
+    font-size: 0.9em;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.users-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--tg-theme-hint-color);
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Стилі для іконки сповіщень */
+.notifications-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#notificationsBtn {
+    position: relative;
+}
+
+/* Стилі для списку сповіщень */
+.notifications-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--tg-theme-hint-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: var(--tg-theme-hint-color);
+}
+
+.notification-unread {
+    background: rgba(var(--tg-theme-button-color), 0.1);
+}
+
+/* Стилі для кнопок в профілі */
+.profile-actions {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+}
+
+/* Для звичайного користувача (3 кнопки) */
+.profile-actions:not(.has-admin) {
+    grid-template-areas: 
+        "settings notifications"
+        "logout logout";
+}
+
+/* Для адміністратора (4 кнопки) */
+.profile-actions.has-admin {
+    grid-template-areas: 
+        "admin admin"
+        "settings notifications"
+        "logout logout";
+}
+
+/* Розміри кнопок */
+.profile-actions #adminPanelBtn {
+    grid-area: admin;
+}
+
+.profile-actions #settingsBtn {
+    grid-area: settings;
+}
+
+.profile-actions #notificationsBtn {
+    grid-area: notifications;
+}
+
+.profile-actions #logoutBtn {
+    grid-area: logout;
+    height: 48px;
+}
+
+/* Стилі для кнопок */
+.profile-actions .button {
+    margin: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}

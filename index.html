@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Сторінка авторизації -->
+        <div id="auth-page" class="page active">
+            <div class="header">
+                <h1>Ласкаво просимо!</h1>
+                <p>Оберіть спосіб входу:</p>
+            </div>
+
+            <div class="button-container">
+                <button class="button" id="loginBtn">
+                    <span class="icon">🔑</span> Увійти
+                </button>
+                <button class="button" id="registerBtn">
+                    <span class="icon">📝</span> Зареєструватися
+                </button>
+                <button class="button telegram-auth" id="telegramAuthBtn">
+                    <span class="icon">✈️</span> Увійти через Telegram
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальне вікно входу -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <h2>Вхід</h2>
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="login-username">Нікнейм</label>
+                        <input 
+                            type="text" 
+                            id="login-username"
+                            name="username" 
+                            placeholder="Ваш нікнейм" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Пароль</label>
+                        <input 
+                            type="password" 
+                            id="login-password"
+                            name="password" 
+                            placeholder="Ваш пароль" 
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="button primary">Увійти</button>
+                    <button type="button" class="button secondary close-modal">Скасувати</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальне вікно реєстрації -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <h2>Реєстрація</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="register-username">Нікнейм</label>
+                        <input 
+                            type="text" 
+                            id="register-username"
+                            name="username" 
+                            placeholder="Придумайте нікнейм" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">Пароль</label>
+                        <input 
+                            type="password" 
+                            id="register-password"
+                            name="password" 
+                            placeholder="Придумайте пароль" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-confirm-password">Підтвердження паролю</label>
+                        <input 
+                            type="password" 
+                            id="register-confirm-password"
+                            name="confirmPassword" 
+                            placeholder="Підтвердіть пароль" 
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="button">Зареєструватися</button>
+                    <button type="button" class="button secondary close-modal">Скасувати</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Сторінка профілю -->
+        <div id="profile-page" class="page">
+            <div class="profile-header">
+                <h1>Мій профіль</h1>
+                <div class="profile-actions" id="profileActions">
+                    <button class="button primary" id="adminPanelBtn" style="display: none;">
+                        <span class="icon">⚡</span> ��дмін-панель
+                    </button>
+                    <button class="button secondary" id="settingsBtn">
+                        <span class="icon">⚙️</span> Налаштування
+                    </button>
+                    <button class="button secondary" id="notificationsBtn">
+                        <span class="icon">🔔</span>
+                        <span class="notifications-badge" id="notificationsBadge">0</span>
+                    </button>
+                    <button class="button secondary" id="logoutBtn">
+                        <span class="icon">↪</span> Вийти
+                    </button>
+                </div>
+                <div class="admin-panel" style="display: none;">
+                    <h3>Панель адміністратора</h3>
+                    <div class="admin-actions">
+                        <button class="button primary" id="broadcastBtn">
+                            <span class="icon">📢</span> Масова розсилка
+                        </button>
+                        <button class="button secondary" id="sendMessageBtn">
+                            <span class="icon">✉️</span> Надіслати повідомлення
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-container">
+                <div class="avatar-section">
+                    <div class="avatar-wrapper" id="avatarWrapper">
+                        <img id="userAvatar" src="./images/default-avatar.png" alt="Avatar">
+                        <div class="avatar-overlay">
+                            <span>Змінити фото</span>
+                        </div>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    </div>
+                    <h2 id="userUsername">@username</h2>
+                </div>
+
+                <div class="profile-info">
+                    <div class="info-group">
+                        <label for="nickname">Нікнейм</label>
+                        <input type="text" id="nickname" placeholder="Ваш нікнейм">
+                    </div>
+
+                    <div class="info-group">
+                        <label for="bio">Про себе</label>
+                        <textarea id="bio" placeholder="Розкажіть щось про себе"></textarea>
+                    </div>
+
+                    <div class="info-group">
+                        <label>Telegram</label>
+                        <div class="telegram-status" id="telegramStatus">
+                            <span class="icon">✈️</span>
+                            <span id="telegramUsername">Не підключено</span>
+                            <button class="button secondary" id="connectTelegramBtn">
+                                Підключити
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="button primary" id="saveProfileBtn">
+                        <span class="icon">💾</span> Зберегти зміни
+                    </button>
+                    <button class="button feed-btn" id="goToFeedBtn">
+                        <span class="icon">👥</span> Перейти до стрічки
+                    </button>
+                    <button class="button premium-btn" id="premiumBtn">
+                        <span class="icon">👑</span> Преміум
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Сторінка стрічки -->
+        <div id="feed-page" class="page">
+            <div class="feed-header">
+                <h2>
+                    Стрічка користувачів
+                    <span class="notification-badge" id="notificationBadge">0</span>
+                </h2>
+                <div class="feed-actions">
+                    <button class="button" id="backToProfileBtn">
+                        <span class="icon">👤</span> Профіль
+                    </button>
+                </div>
+            </div>
+            
+            <div class="users-grid" id="usersGrid">
+                <!-- Користувачі будуть додаватися через JavaScript -->
+            </div>
+
+            <!-- Модальне вікно сповіщень -->
+            <div id="notificationsModal" class="modal">
+                <div class="modal-content">
+                    <h2>Сповіщення</h2>
+                    <div class="notifications-list" id="notificationsList">
+                        <!-- Сповіщення будуть додаватися через JavaScript -->
+                    </div>
+                    <div class="button-group">
+                        <button class="button secondary close-modal">Закрити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальне вікно підключення Telegram -->
+        <div id="telegramModal" class="modal">
+            <div class="modal-content">
+                <h2>Підключення Telegram</h2>
+                <p>Введіть ваш Telegram username:</p>
+                
+                <button class="button" id="manualTelegramBtn">
+                    <span class="icon">✏️</span>
+                    Вказати вручну
+                </button>
+
+                <form id="manualTelegramForm">
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            name="telegramUsername" 
+                            placeholder="Введіть username без @"
+                            pattern="[a-zA-Z0-9_]{5,32}"
+                            required
+                        >
+                        <small class="help-text">Наприклад: username</small>
+                    </div>
+                    <button type="submit" class="button primary">Зберегти</button>
+                </form>
+
+                <button type="button" class="button secondary close-modal">Скасувати</button>
+            </div>
+        </div>
+
+        <!-- Додайте нову сторінку налаштувань -->
+        <div id="settings-page" class="page">
+            <div class="settings-header">
+                <h1>Налаштування</h1>
+                <button class="button secondary" id="backFromSettingsBtn">
+                    <span class="icon">↩</span> Назад
+                </button>
+            </div>
+
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h2>Підтримка проекту</h2>
+                    <p>Допоможіть нам розвивати проект!</p>
+                    
+                    <div class="donation-options">
+                        <button class="button donation-btn" data-amount="50">
+                            <span class="icon">💝</span>
+                            50 UAH
+                        </button>
+                        <button class="button donation-btn" data-amount="100">
+                            <span class="icon">💎</span>
+                            100 UAH
+                        </button>
+                        <button class="button donation-btn" data-amount="200">
+                            <span class="icon">👑</span>
+                            200 UAH
+                        </button>
+                        <button class="button donation-btn custom" id="customDonationBtn">
+                            <span class="icon">✨</span>
+                            Інша сума
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2>Про проект</h2>
+                    <p>Версія: 1.0.0</p>
+                    <p>Розробник: @developer</p>
+                    <button class="button secondary" id="contactDevBtn">
+                        <span class="icon">📨</span>
+                        Зв'язатися з розробником
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальне вікно налаштувань -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <h2>Налаштування</h2>
+                
+                <!-- Основні налаштування -->
+                <div class="settings-section">
+                    <h3>Основні налаштування</h3>
+                    <div class="settings-container">
+                        <div class="form-group">
+                            <label for="darkMode">Темна тема</label>
+                            <input type="checkbox" id="darkMode">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notifications">Сповіщення</label>
+                            <input type="checkbox" id="notifications">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="language">Мова</label>
+                            <select id="language">
+                                <option value="uk">Українська</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="privacy">Приватність профілю</label>
+                            <select id="privacy">
+                                <option value="public">Публічний</option>
+                                <option value="private">Приватний</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Підтримка проекту -->
+                <div class="settings-section">
+                    <h3>Підтримка проекту</h3>
+                    <p class="section-description">Допоможіть нам розвивати проект!</p>
+                    
+                    <div class="donation-options">
+                        <button class="button donation-btn" data-amount="50">
+                            <span class="icon">💝</span>
+                            50 UAH
+                        </button>
+                        <button class="button donation-btn" data-amount="100">
+                            <span class="icon">💎</span>
+                            100 UAH
+                        </button>
+                        <button class="button donation-btn" data-amount="200">
+                            <span class="icon">👑</span>
+                            200 UAH
+                        </button>
+                        <button class="button donation-btn custom" id="customDonationBtn">
+                            <span class="icon">✨</span>
+                            Інша сума
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Про проект -->
+                <div class="settings-section">
+                    <h3>Про проект</h3>
+                    <p class="version-info">Версія: 1.0.0</p>
+                    <button class="button contact-dev-btn" onclick="contactDeveloper()">
+                    </button>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="button primary" id="saveSettingsBtn">Зберегти</button>
+                    <button type="button" class="button secondary close-modal">Скасуват</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальне вікно преміум -->
+        <div id="premiumModal" class="modal">
+            <div class="modal-content premium-content">
+                <h2>🌟 преміум</h2>
+                
+                <!-- Контент для звичайних користувачів -->
+                <div id="premiumPurchaseContent" style="display: none;">
+                    <div class="premium-info">
+                        <h3>Отримайте преміум доступ</h3>
+                        <div class="premium-features">
+                            <div class="feature">
+                                <span class="icon">✨</span>
+                                <p>нікальні анімації профілю</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">🎨</span>
+                                <p>Кастомізація кольорів</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">🌈</span>
+                                <p>Спеціальні е��екти</p>
+                            </div>
+                            <div class="feature">
+                                <span class="icon">👑</span>
+                                <p>Особливий статус</p>
+                            </div>
+                        </div>
+                        <div class="premium-price">
+                            <h4>Вартість:</h4>
+                            <p class="price">50 грн</p>
+                        </div>
+                        <button class="button primary" id="purchasePremiumBtn">
+                            <span class="icon">💎</span> Придбати преміум
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Контент для преміум користувачів -->
+                <div id="premiumSettingsContent" style="display: none;">
+                    <!-- Тут залишаємо весь існуючий код для налаштувань преміуму -->
+                    <div class="premium-status">
+                        <div class="premium-badge">
+                            <span class="icon">👑</span>
+                            <span id="premiumStatusText">Базовий акаунт</span>
+                        </div>
+                        <button class="button primary" id="activatePremiumBtn">
+                            Активувати преміум
+                        </button>
+                    </div>
+
+                    <!-- Налаштування преміум -->
+                    <div class="premium-settings">
+                        <div class="settings-section">
+                            <h3>🎨 Оформлення профілю</h3>
+                            <div class="form-group">
+                                <label>Колір профілю</label>
+                                <div class="color-picker">
+                                    <input type="color" id="profileColor" value="#2481cc">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Анімація профілю</label>
+                                <select id="profileAnimation">
+                                    <option value="none">Без анімації</option>
+                                    <option value="fade">Плавна поява</option>
+                                    <option value="slide">Слайд</option>
+                                    <option value="bounce">Відскок</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>✨ Спеціальні ефекти</h3>
+                            
+                            <!-- Фон профілю -->
+                            <div class="form-group">
+                                <label>Фон профілю</label>
+                                <select id="profileBackground">
+                                    <option value="none">Звичайний</option>
+                                    <option value="gradient">Градієнт</option>
+                                    <option value="particles">Частинки</option>
+                                    <option value="snow">Сніг</option>
+                                    <option value="matrix">Matrix</option>
+                                    <option value="terminal">Командний рядок</option>
+                                    <option value="sparkles">Іскри</option>
+                                    <option value="bubbles">Бульбашки</option>
+                                    <option value="neon">Неон</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Налаштування кольорів ефектів -->
+                            <div class="form-group effect-colors">
+                                <label>Колір ефекту</label>
+                                <input type="color" id="effectColor" value="#00ff00">
+                                
+                                <!-- Додаткові налаштування для Matrix -->
+                                <div class="effect-settings matrix-settings" style="display: none;">
+                                    <label>Швидкість анімації</label>
+                                    <input type="range" id="matrixSpeed" min="5" max="30" value="20">
+                                    <label>Розмір символів</label>
+                                    <input type="range" id="matrixSize" min="8" max="20" value="10">
+                                    <label>Символи</label>
+                                    <input type="text" id="matrixChars" value="01" placeholder="Символи для анімації">
+                                </div>
+                                
+                                <!-- Налаштування для неону -->
+                                <div class="effect-settings neon-settings" style="display: none;">
+                                    <label>Інтенсивність світіння</label>
+                                    <input type="range" id="neonIntensity" min="1" max="10" value="5">
+                                    <label>Швидкість пульсації</label>
+                                    <input type="range" id="neonPulseSpeed" min="0.5" max="5" value="2" step="0.5">
+                                </div>
+                                
+                                <!-- Налаштування для терміналу -->
+                                <div class="effect-settings terminal-settings" style="display: none;">
+                                    <label>Текст терміналу</label>
+                                    <input type="text" id="terminalText" value=">" placeholder="Символ терміналу">
+                                    <label>Швидкість блимання</label>
+                                    <input type="range" id="terminalBlinkSpeed" min="0.2" max="2" value="1" step="0.1">
+                                </div>
+                                
+                                <!-- Налаштування для снігу -->
+                                <div class="effect-settings snow-settings" style="display: none;">
+                                    <label>Розмір сніжинок</label>
+                                    <input type="range" id="snowSize" min="1" max="5" value="2">
+                                    <label>Швидкість падіння</label>
+                                    <input type="range" id="snowSpeed" min="5" max="20" value="10">
+                                    <label>Щільність</label>
+                                    <input type="range" id="snowDensity" min="1" max="10" value="5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>😊 Емодзі та значки</h3>
+                            <div class="form-group">
+                                <label>Значок статусу</label>
+                                <div class="emoji-picker">
+                                    <button class="emoji-option" data-emoji="👑">👑</button>
+                                    <button class="emoji-option" data-emoji="���">💎</button>
+                                    <button class="emoji-option" data-emoji="⭐">⭐</button>
+                                    <button class="emoji-option" data-emoji="🌟">🌟</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="button primary" id="savePremiumBtn">Зберегти</button>
+                        <button type="button" class="button secondary close-modal">Скасувати</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Додайте модальне вікно для розсилки -->
+        <div id="broadcastModal" class="modal">
+            <div class="modal-content">
+                <h2>Масова розсилка</h2>
+                <div class="form-group">
+                    <label>Повідомлення</label>
+                    <textarea id="broadcastMessage" placeholder="Введіть текст повідомленн��"></textarea>
+                </div>
+                <div class="button-group">
+                    <button class="button primary" id="sendBroadcastBtn">Надіслати всім</button>
+                    <button class="button secondary close-modal">Скасувати</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Додайте нову сторінку адмін-панелі -->
+        <div id="admin-page" class="page">
+            <div class="admin-header">
+                <h1>Адмін-панель</h1>
+                <div class="admin-actions">
+                    <button class="button" id="backToProfileBtn">
+                        <span class="icon">↩️</span> Назад до профілю
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-container">
+                <div class="admin-section">
+                    <h2>📢 Масова розсилка</h2>
+                    <div class="form-group">
+                        <textarea id="broadcastMessage" placeholder="Текст повідомлення для всіх користувачів"></textarea>
+                        <button class="button primary" id="sendBroadcastBtn">
+                            <span class="icon">📨</span> Надіслати всім
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>👥 Користувачі</h2>
+                    <div class="users-list" id="adminUsersList">
+                        <!-- Список користувачів буде додано через JavaScript -->
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>📊 Статистика</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-title">Всього користувачів</span>
+                            <span class="stat-value" id="totalUsers">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-title">Преміум користувачів</span>
+                            <span class="stat-value" id="premiumUsers">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="app.js"></script>
+    <div class="contact-developer">
+        <a href="https://t.me/pilkxzz" target="_blank" class="contact-btn">
+            <span class="icon">📨</span> Зв'язатися з розробником
+        </a>
+    </div>
+</body>
+</html>
